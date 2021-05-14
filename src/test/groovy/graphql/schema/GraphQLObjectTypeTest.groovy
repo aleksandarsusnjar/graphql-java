@@ -71,4 +71,64 @@ class GraphQLObjectTypeTest extends Specification {
         objectType.getField("Str").getType() == GraphQLString
         objectType.getFields().size() == 2
     }
+
+    def "equals(null) yield false"() {
+        given:
+        def someType = newObject().name("SomeType").build()
+
+        expect:
+        someType.equals(null) == false
+    }
+
+    def "Differently wrapped types are not considered equal"() {
+        given:
+        def someType = newObject().name("SomeType").build()
+        def someTypeN = GraphQLNonNull.nonNull(someType)
+        def someTypeL = GraphQLList.list(someType)
+        def someTypeLN = GraphQLList.list(someTypeN)
+        def someTypeNL = GraphQLNonNull.nonNull(someTypeL)
+        def someTypeNLN = GraphQLNonNull.nonNull(someTypeLN)
+
+        expect:
+        someType.equals(someTypeN) == false
+        someType.equals(someTypeL) == false
+        someType.equals(someTypeLN) == false
+        someType.equals(someTypeNL) == false
+        someType.equals(someTypeNLN) == false
+    }
+
+    def "Same-name types of same kind are considered equal"() {
+        given:
+        def someType1 = newObject().name("SomeType").build()
+        def someType2 = newObject().name("SomeType").build()
+
+        expect:
+        someType1.equals(someType2) == true
+    }
+
+    def "Differently named types of same kind are not considered equal"() {
+        given:
+        def someType1 = newObject().name("SomeType1").build()
+        def someType2 = newObject().name("SomeType2").build()
+
+        expect:
+        someType1.equals(someType2) == false
+    }
+
+    def "Same-name types have equal hash codes"() {
+        given:
+        def someType1 = newObject().name("SomeType").build()
+        def someType2 = newObject().name("SomeType").build()
+
+        expect:
+        someType1.hashCode() == someType2.hashCode();
+    }
+
+    def "Type is equal to itself"() {
+        given:
+        def someType = newObject().name("SomeType").build()
+
+        expect:
+        someType.equals(someType) == true
+    }
 }
