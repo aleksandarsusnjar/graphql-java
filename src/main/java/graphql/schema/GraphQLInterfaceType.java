@@ -249,19 +249,23 @@ public class GraphQLInterfaceType implements GraphQLNamedType, GraphQLCompositeT
     }
 
     /**
-     * {@inheritDoc}
+     * Returns {@code true} if {@code other} is an interface type with equal
+     * {@linkplain #getName() name} as this one.
      */
     @Override
-    public final boolean equals(Object o) {
-        return super.equals(o);
+    public final boolean equals(Object other) {
+        if ((other == null) || (other.getClass() != this.getClass())) {
+            return false;
+        }
+        return ((GraphQLInterfaceType)other).getName().equals(this.getName());
     }
 
     /**
-     * {@inheritDoc}
+     * Returns a hash code consistent with {@link #equals(Object)}.
      */
     @Override
     public final int hashCode() {
-        return super.hashCode();
+        return getClass().hashCode() ^ getName().hashCode();
     }
 
 

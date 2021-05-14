@@ -67,5 +67,23 @@ public class GraphQLTypeReference implements GraphQLNamedOutputType, GraphQLName
         return typeRef(getName());
     }
 
+    /**
+     * Returns {@code true} if {@code other} is a type reference to the equally
+     * {@linkplain #getName() named} type as this one.
+     */
+    @Override
+    public final boolean equals(Object other) {
+        if ((other == null) || (other.getClass() != this.getClass())) {
+            return false;
+        }
+        return ((GraphQLTypeReference)other).getName().equals(this.getName());
+    }
 
+    /**
+     * Returns a hash code consistent with {@link #equals(Object)}.
+     */
+    @Override
+    public final int hashCode() {
+        return getClass().hashCode() ^ getName().hashCode();
+    }
 }
